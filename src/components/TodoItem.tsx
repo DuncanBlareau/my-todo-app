@@ -1,36 +1,23 @@
 import React from 'react';
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+import { Todo } from '../models/Todo';
+import { Link } from 'react-router-dom';
 
 interface TodoItemProps {
   todo: Todo;
   onToggleCompleted: (id: number, completed: boolean) => void;
-  onSelectTodo: (id: number) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggleCompleted, onSelectTodo }) => {
-  const handleChange = () => {
-    onToggleCompleted(todo.id, !todo.completed);
-  };
-
-  const handleClick = () => {
-    onSelectTodo(todo.id);
-  };
-
-  const textStyle = {
-    textDecoration: todo.completed ? 'line-through' : 'none',
+const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggleCompleted }) => {
+  const handleToggleCompleted = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onToggleCompleted(todo.id, event.target.checked);
   };
 
   return (
     <li>
-      <input type="checkbox" checked={todo.completed} onChange={handleChange} />
-      <span style={textStyle} onClick={handleClick}>
+      <input type="checkbox" checked={todo.completed} onChange={handleToggleCompleted} />
+      <Link to={`/todos/${todo.id}`} style={todo.completed ? { textDecoration: 'line-through' } : {}}>
         {todo.title}
-      </span>
+      </Link>
     </li>
   );
 };

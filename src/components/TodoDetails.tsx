@@ -1,12 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-
-interface Todo {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-}
+import { Todo } from '../models/Todo';
 
 interface TodoDetailsProps {
   todos: Todo[];
@@ -14,12 +8,7 @@ interface TodoDetailsProps {
 
 const TodoDetails: React.FC<TodoDetailsProps> = ({ todos }) => {
   const { id } = useParams<{ id: string }>();
-
-  if (!id) {
-    return <div>Todo introuvable</div>;
-  }
-
-  const todoId = parseInt(id, 10);
+  const todoId = parseInt(id as string, 10);
   const todo = todos.find((t) => t.id === todoId);
 
   if (!todo) {
@@ -29,7 +18,8 @@ const TodoDetails: React.FC<TodoDetailsProps> = ({ todos }) => {
   return (
     <div>
       <h2>{todo.title}</h2>
-      <p>{todo.description}</p>
+      {todo.description && <p>Description: {todo.description}</p>}
+      <p>État: {todo.completed ? 'Terminé' : 'En cours'}</p>
     </div>
   );
 };

@@ -1,79 +1,78 @@
-import React, { useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Route, Routes, Link } from 'react-router-dom';
+import { Todo } from './models/Todo';
 import TodoList from './components/TodoList';
 import TodoDetails from './components/TodoDetails';
-
-interface Todo {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-}
+import { getTodos, toggleTodo, addTodo } from './api/todos';
 
 const App: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([
-    { id: 1, title: 'Apprendre React', description: 'Se familiariser avec React et ses concepts', completed: false },
-    { id: 2, title: 'Créer une application Todo', description: 'Développer une application Todo en utilisant React', completed: false },
-    { id: 3, title: 'Faire des tests unitaires', description: 'Écrire des tests unitaires pour garantir la qualité du code', completed: false },
-  ]);
-  const navigate = useNavigate();
-  const [newTodoTitle, setNewTodoTitle] = useState('');
-  const [newTodoDescription, setNewTodoDescription] = useState('');
+  const [todos, setTodos] = useState<Todo[]>([]);
 
-  const handleToggleCompleted = (id: number, completed: boolean) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id
-          ? {
-              ...todo,
-              completed,
-            }
-          : todo
-      )
+  useEffect(() => {
+    async function fetchTodos() {
+      const fetchedTodos = await getTodos();
+      setTodos(fetchedTodos);
+    }
+    fetchTodos();
+  }, []);
+
+  const handleToggleCompleted = async (id: number, completed: boolean) => {
+    await toggleTodo(id, completed);
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, completed } : todo
     );
+    setTodos(updatedTodos);
   };
 
-  const handleSelectTodo = (id: number) => {
-    navigate(`/todo/${id}`);
-  };
-
-  const handleAddTodo = (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleAddTodo = async (title: string, description: string) => {
     const newTodo: Todo = {
       id: Date.now(),
-      title: newTodoTitle,
-      description: newTodoDescription,
+      title,
+      description,
       completed: false,
     };
-
+    await addTodo(newTodo);
     setTodos([newTodo, ...todos]);
-    setNewTodoTitle('');
-    setNewTodoDescription('');
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const titleInput = e.currentTarget.elements.namedItem('title') as HTMLInputElement;
+    const descriptionInput = e.currentTarget.elements.namedItem('description') as HTMLInputElement;
+    handleAddTodo(titleInput.value, descriptionInput.value);
+    titleInput.value = '';
+    descriptionInput.value = '';
   };
 
   return (
-    
-      <div>
-        <h1>Mon application Todo</h1>
-        <form onSubmit={handleAddTodo}>
+    <div>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+        </ul>
+      </nav>
+      <h1>Mon application Todo</h1>
+      <form onSubmit={handleSubmit}>
         <label>
-          Titre:
-          <input type="text" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} required />
+          <input type="text" name="title" placeholder="Titre" required />
         </label>
         <label>
-          Description:
-          <input type="text" value={newTodoDescription} onChange={(e) => setNewTodoDescription(e.target.value)} />
+          <input type="text" name="description" placeholder="Description" />
         </label>
-        <button type="submit">Ajouter</button>
+        <button type="submit">Ajouter un todo</button>
       </form>
-        <Routes>
-          <Route path="/" element={<TodoList todos={todos} onToggleCompleted={handleToggleCompleted} onSelectTodo={handleSelectTodo} />}/>
-          <Route path="/todo/:id" element={<TodoDetails todos={todos} />}/>
-        </Routes>
-      </div>
-  
+      <Routes>
+        <Route
+          path="/"
+          element={<TodoList todos={todos} onToggleCompleted={handleToggleCompleted} />}
+          />
+        <Route path="/todos/:id" element={<TodoDetails todos={todos} />} />
+      </Routes>
+    </div>
   );
 };
 
 export default App;
+     
