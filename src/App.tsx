@@ -17,7 +17,8 @@ const App: React.FC = () => {
     { id: 3, title: 'Faire des tests unitaires', description: 'Écrire des tests unitaires pour garantir la qualité du code', completed: false },
   ]);
   const navigate = useNavigate();
-  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
+  const [newTodoTitle, setNewTodoTitle] = useState('');
+  const [newTodoDescription, setNewTodoDescription] = useState('');
 
   const handleToggleCompleted = (id: number, completed: boolean) => {
     setTodos(
@@ -33,15 +34,39 @@ const App: React.FC = () => {
   };
 
   const handleSelectTodo = (id: number) => {
-    const todo = todos.find((t) => t.id === id);
-    setSelectedTodo(todo || null);
     navigate(`/todo/${id}`);
+  };
+
+  const handleAddTodo = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const newTodo: Todo = {
+      id: Date.now(),
+      title: newTodoTitle,
+      description: newTodoDescription,
+      completed: false,
+    };
+
+    setTodos([newTodo, ...todos]);
+    setNewTodoTitle('');
+    setNewTodoDescription('');
   };
 
   return (
     
       <div>
         <h1>Mon application Todo</h1>
+        <form onSubmit={handleAddTodo}>
+        <label>
+          Titre:
+          <input type="text" value={newTodoTitle} onChange={(e) => setNewTodoTitle(e.target.value)} required />
+        </label>
+        <label>
+          Description:
+          <input type="text" value={newTodoDescription} onChange={(e) => setNewTodoDescription(e.target.value)} />
+        </label>
+        <button type="submit">Ajouter</button>
+      </form>
         <Routes>
           <Route path="/" element={<TodoList todos={todos} onToggleCompleted={handleToggleCompleted} onSelectTodo={handleSelectTodo} />}/>
           <Route path="/todo/:id" element={<TodoDetails todos={todos} />}/>
