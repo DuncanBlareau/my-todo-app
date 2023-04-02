@@ -8,13 +8,22 @@ interface Todo {
 
 interface TodoItemProps {
   todo: Todo;
+  onToggleCompleted: (id: number, completed: boolean) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggleCompleted }) => {
+  const handleChange = () => {
+    onToggleCompleted(todo.id, !todo.completed);
+  };
+
+  const textStyle = {
+    textDecoration: todo.completed ? 'line-through' : 'none',
+  };
+
   return (
     <li>
-      <input type="checkbox" checked={todo.completed} />
-      <span>{todo.title}</span>
+      <input type="checkbox" checked={todo.completed} onChange={handleChange} />
+      <span style={textStyle}>{todo.title}</span>
     </li>
   );
 };

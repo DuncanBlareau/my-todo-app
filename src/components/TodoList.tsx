@@ -9,15 +9,18 @@ interface Todo {
 
 interface TodoListProps {
   todos: Todo[];
+  onToggleCompleted: (id: number, completed: boolean) => void;
 }
 
-const TodoList: React.FC<TodoListProps> = ({ todos }) => {
+const TodoList: React.FC<TodoListProps> = ({ todos, onToggleCompleted }) => {
+  const sortedTodos = todos.sort((a, b) => (a.completed ? 1 : -1));
+
   return (
     <div>
       <h2>Liste des tâches</h2>
       <ul>
-        {todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} />
+        {sortedTodos.map((todo) => (
+          <TodoItem key={todo.id} todo={todo} onToggleCompleted={onToggleCompleted} />
         ))}
       </ul>
     </div>

@@ -14,10 +14,23 @@ const App: React.FC = () => {
     { id: 3, title: 'Faire des tests unitaires', completed: false },
   ]);
 
+  const handleToggleCompleted = (id: number, completed: boolean) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id
+          ? {
+              ...todo,
+              completed,
+            }
+          : todo
+      )
+    );
+  };
+
   return (
     <div>
       <h1>Mon application Todo</h1>
-      <TodoList todos={todos} />
+      <TodoList todos={todos} onToggleCompleted={handleToggleCompleted} />
     </div>
   );
 };
