@@ -9,11 +9,16 @@ interface Todo {
 interface TodoItemProps {
   todo: Todo;
   onToggleCompleted: (id: number, completed: boolean) => void;
+  onSelectTodo: (id: number) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggleCompleted }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggleCompleted, onSelectTodo }) => {
   const handleChange = () => {
     onToggleCompleted(todo.id, !todo.completed);
+  };
+
+  const handleClick = () => {
+    onSelectTodo(todo.id);
   };
 
   const textStyle = {
@@ -23,7 +28,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggleCompleted }) => {
   return (
     <li>
       <input type="checkbox" checked={todo.completed} onChange={handleChange} />
-      <span style={textStyle}>{todo.title}</span>
+      <span style={textStyle} onClick={handleClick}>
+        {todo.title}
+      </span>
     </li>
   );
 };

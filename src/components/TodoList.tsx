@@ -10,9 +10,10 @@ interface Todo {
 interface TodoListProps {
   todos: Todo[];
   onToggleCompleted: (id: number, completed: boolean) => void;
+  onSelectTodo: (id: number) => void;
 }
 
-const TodoList: React.FC<TodoListProps> = ({ todos, onToggleCompleted }) => {
+const TodoList: React.FC<TodoListProps> = ({ todos, onToggleCompleted, onSelectTodo }) => {
   const sortedTodos = todos.sort((a, b) => (a.completed ? 1 : -1));
 
   return (
@@ -20,7 +21,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onToggleCompleted }) => {
       <h2>Liste des tâches</h2>
       <ul>
         {sortedTodos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} onToggleCompleted={onToggleCompleted} />
+          <TodoItem key={todo.id} todo={todo} onToggleCompleted={onToggleCompleted} onSelectTodo={onSelectTodo} />
         ))}
       </ul>
     </div>
