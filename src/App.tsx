@@ -7,23 +7,35 @@ import { getTodos, toggleTodo, addTodo } from './api/todos';
 
 const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
 
   useEffect(() => {
     async function fetchTodos() {
       const fetchedTodos = await getTodos();
-      setTodos(fetchedTodos);
-    }
+      if (typeof fetchedTodos === 'string') {
+        setError(fetchedTodos);
+      } else {
+        setTodos(fetchedTodos);
+        setError(null); // Réinitialiser l'état d'erreur
+      }
+    }    
     fetchTodos();
   }, []);
 
   const handleToggleCompleted = async (id: number, completed: boolean) => {
-    await toggleTodo(id, completed);
-    const updatedTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed } : todo
-    );
-    setTodos(updatedTodos);
+    const errorMessage = await toggleTodo(id, completed);
+    if (errorMessage) {
+      setError(errorMessage);
+    } else {
+      const updatedTodos = todos.map((todo) =>
+        todo.id === id ? { ...todo, completed } : todo
+      );
+      setTodos(updatedTodos);
+      setError(null); // Réinitialiser l'état d'erreur
+    }
   };
-
+  
   const handleAddTodo = async (title: string, description: string) => {
     const newTodo: Todo = {
       id: Date.now(),
@@ -31,9 +43,14 @@ const App: React.FC = () => {
       description,
       completed: false,
     };
-    await addTodo(newTodo);
-    setTodos([newTodo, ...todos]);
-  };
+    const errorMessage = await addTodo(newTodo);
+    if (errorMessage) {
+      setError(errorMessage);
+    } else {
+      setTodos([newTodo, ...todos]);
+      setError(null); // Réinitialiser l'état d'erreur
+    }
+  };  
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,6 +71,7 @@ const App: React.FC = () => {
         </ul>
       </nav>
       <h1>Mon application Todo</h1>
+      {error && <div className="error">{error}</div>}
       <form onSubmit={handleSubmit}>
         <label>
           <input type="text" name="title" placeholder="Titre" required />
