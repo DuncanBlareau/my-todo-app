@@ -8,7 +8,7 @@ interface TodoListProps {
 }
 
 const TodoList: React.FC<TodoListProps> = ({ todos, onToggleCompleted }) => {
-  const sortedTodos = todos.sort((a, b) => (a.completed === b.completed ? 0 : a.completed ? 1 : -1));
+  const sortedTodos = [...todos].sort((a, b) => (a.completed === b.completed ? 0 : a.completed ? 1 : -1));
 
   return (
     <div>

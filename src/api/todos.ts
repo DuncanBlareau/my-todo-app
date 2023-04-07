@@ -43,7 +43,6 @@ export async function addTodo(todo: Todo): Promise<void | string> {
       },
       body: JSON.stringify(todo),
     });
-
     if (!response.ok) {
       throw new Error(`HTTP error ${response.status}`);
     }

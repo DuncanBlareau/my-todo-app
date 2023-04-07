@@ -11,16 +11,24 @@ const App: React.FC = () => {
 
 
   useEffect(() => {
+    const todosJson = localStorage.getItem('todos');
+    if (todosJson) {
+      const storedTodos = JSON.parse(todosJson);
+      setTodos(storedTodos);
+    } else {
+      fetchTodos();
+    }
+
     async function fetchTodos() {
       const fetchedTodos = await getTodos();
       if (typeof fetchedTodos === 'string') {
         setError(fetchedTodos);
       } else {
         setTodos(fetchedTodos);
+        localStorage.setItem('todos', JSON.stringify(fetchedTodos));
         setError(null); // Réinitialiser l'état d'erreur
       }
-    }    
-    fetchTodos();
+    }
   }, []);
 
   const handleToggleCompleted = async (id: number, completed: boolean) => {
@@ -32,6 +40,7 @@ const App: React.FC = () => {
         todo.id === id ? { ...todo, completed } : todo
       );
       setTodos(updatedTodos);
+      localStorage.setItem('todos', JSON.stringify(updatedTodos));
       setError(null); // Réinitialiser l'état d'erreur
     }
   };
@@ -48,6 +57,7 @@ const App: React.FC = () => {
       setError(errorMessage);
     } else {
       setTodos([newTodo, ...todos]);
+      localStorage.setItem('todos', JSON.stringify([newTodo, ...todos]));
       setError(null); // Réinitialiser l'état d'erreur
     }
   };  

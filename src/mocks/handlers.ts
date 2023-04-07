@@ -35,8 +35,15 @@ export const handlers = [
 
   rest.put('/todos/:id', (req, res, ctx) => {
     const todoId = parseInt(req.params.id as string,10);
-    const updatedTodo = req.body as any;
-    todos = todos.map((todo) => (todo.id === todoId ? updatedTodo : todo));
-    return res(ctx.json(updatedTodo));
+    const updatedCompleted = req.body as any;
+
+    // Trouver l'index du todo à mettre à jour
+    const todoIndex = todos.findIndex((todo) => todo.id === todoId);
+  
+    // Mettre à jour le statut completed du todo
+    todos[todoIndex].completed = updatedCompleted.completed;
+  
+    // Renvoyer le todo mis à jour
+    return res(ctx.json(todos[todoIndex]));
     }),
-    ];
+];
