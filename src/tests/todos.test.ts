@@ -1,7 +1,7 @@
 import { getTodos, toggleTodo, addTodo } from '../api/todos';
 import { Todo } from '../models/Todo';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = '/todos';
 
 describe('todos API', () => {
   afterEach(() => {
@@ -35,7 +35,7 @@ describe('todos API', () => {
 
     // Assert
     expect(todos).toEqual(mockTodos);
-    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/todos`);
+    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}`);
   });
 
   test('toggleTodo updates todo status successfully', async () => {
@@ -51,7 +51,7 @@ describe('todos API', () => {
 
     // Assert
     expect(error).toBeUndefined();
-    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/todos/${todoId}`, {
+    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/${todoId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ describe('todos API', () => {
 
     // Assert
     expect(error).toBeUndefined();
-    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/todos`, {
+    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ describe('todos API', () => {
 
     // Assert
     expect(result).toBe('Erreur lors de la mise à jour du Todo : Failed to fetch');
-    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/todos`);
+    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}`);
   });
 
   test('toggleTodo handles error when updating todo status', async () => {
@@ -109,7 +109,7 @@ describe('todos API', () => {
 
     // Assert
     expect(error).toBe('Erreur lors de la mise à jour du Todo : Failed to update');
-    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/todos/${todoId}`, {
+    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/${todoId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ describe('todos API', () => {
 
     // Assert
     expect(error).toBe('Erreur lors de la mise à jour du Todo : Failed to add');
-    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/todos`, {
+    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

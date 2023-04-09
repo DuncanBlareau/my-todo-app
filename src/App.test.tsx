@@ -11,7 +11,7 @@ const mockTodos: Todo[] = [
   {
     id: 1,
     title: 'Faire les courses',
-    description: 'Acheter des fruits, légumes, et produits d\'épicerie',
+    description: 'Acheter des fruits',
     completed: false,
   },
   {
@@ -44,18 +44,18 @@ describe('App', () => {
     fireEvent.click(await screen.findByText('Faire les courses'));
 
     expect(screen.getByText('Faire les courses')).toBeInTheDocument();
-    expect(screen.getByText('Description: Acheter des fruits, légumes, et produits d\'épicerie')).toBeInTheDocument();
+    expect(screen.getByText('Acheter des fruits')).toBeInTheDocument();
   });
 
   it('adds a new todo and displays it', async () => {
     render(<App />, { wrapper: MemoryRouter });
 
-    const titleInput = screen.getByPlaceholderText('Titre') as HTMLInputElement;
+    const titleInput = screen.getByPlaceholderText('...Ménage...') as HTMLInputElement;
     fireEvent.change(titleInput, { target: { value: 'Nouvelle tâche' } });
 
-    const descriptionInput = screen.getByPlaceholderText('Description') as HTMLInputElement;
+    const descriptionInput = screen.getByPlaceholderText('...Il faut passer l\'aspirateur...') as HTMLInputElement;
     fireEvent.change(descriptionInput, { target: { value: 'Détails de la nouvelle tâche' } });
-    fireEvent.click(screen.getByText('Ajouter un todo'));
+    fireEvent.click(screen.getByText('Ajoutez une nouvelle tâche'));
 
     // Attendez que la fonction addTodo soit appelée
     await waitFor(() => expect(todosApi.addTodo).toHaveBeenCalled());

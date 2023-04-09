@@ -1,6 +1,15 @@
 import { rest } from 'msw';
 
-let todos = [
+interface Todo {
+  id: number;
+  title: string;
+  description?: string;
+  completed: boolean;
+}
+
+//let todos: Todo[] = [];
+
+let todos: Todo[] = [
     {
       id: 1,
       title: "Faire les courses",
@@ -24,7 +33,10 @@ let todos = [
 
 export const handlers = [
   rest.get('/todos', (req, res, ctx) => {
-    return res(ctx.json(todos));
+    if (todos.length === 0) {
+      return res(ctx.status(204), ctx.json({ message: 'No todos found' }));
+    } else {
+      return res(ctx.json(todos));}
   }),
 
   rest.post('/todos', (req, res, ctx) => {
@@ -34,16 +46,26 @@ export const handlers = [
   }),
 
   rest.put('/todos/:id', (req, res, ctx) => {
-    const todoId = parseInt(req.params.id as string,10);
+    const todoId = parseInt(req.params.id as string, 10);
     const updatedCompleted = req.body as any;
-
+  
     // Trouver l'index du todo à mettre à jour
     const todoIndex = todos.findIndex((todo) => todo.id === todoId);
   
-    // Mettre à jour le statut completed du todo
-    todos[todoIndex].completed = updatedCompleted.completed;
+    if (todoIndex === -1) {
+      // Renvoyer une réponse avec un statut 404 si le todo n'a pas été trouvé
+      return res(ctx.status(404), ctx.json({ message: 'Todo not found' }));
+    } else {
+      // Mettre à jour le statut completed du todo
+      todos[todoIndex].completed = updatedCompleted.completed;
   
-    // Renvoyer le todo mis à jour
-    return res(ctx.json(todos[todoIndex]));
-    }),
+      // Renvoyer le todo mis à jour
+      return res(ctx.json(todos[todoIndex]));
+    }
+  }),
+
+  rest.delete('/todos', (req, res, ctx) => {
+    todos = [];
+    return res(ctx.status(200));
+  }),  
 ];

@@ -3,7 +3,7 @@ import { Route, Routes, Link } from 'react-router-dom';
 import { Todo } from './models/Todo';
 import TodoList from './components/TodoList';
 import TodoDetails from './components/TodoDetails';
-import { getTodos, toggleTodo, addTodo } from './api/todos';
+import { getTodos, toggleTodo, addTodo, deleteAllTodos } from './api/todos';
 
 const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -71,30 +71,62 @@ const App: React.FC = () => {
     descriptionInput.value = '';
   };
 
+  const handleDeleteAllTodos = async () => {
+    try {
+      await deleteAllTodos();
+      setTodos([]); // Mettez à jour l'état local des todos
+    } catch (error) {
+      console.error('Erreur lors de la suppression de tous les todos:', error);
+    }
+  };
+
   return (
-    <div>
-      <nav>
-        <ul>
+    <div className="max-w-3xl mx-auto px-4 mt-6">
+      <nav className="bg-gray-800 p-4 rounded-t-lg">
+        <ul className="flex justify-start space-x-4">
           <li>
-            <Link to="/">Home</Link>
+            <Link className="text-white text-4xl font-bold mb-4" to="/">Mon application Todo</Link>
           </li>
         </ul>
       </nav>
-      <h1>Mon application Todo</h1>
-      {error && <div className="error">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          <input type="text" name="title" placeholder="Titre" required />
-        </label>
-        <label>
-          <input type="text" name="description" placeholder="Description" />
-        </label>
-        <button type="submit">Ajouter un todo</button>
+      {error && <div className="bg-red-500 text-white p-4 rounded-md mb-4">{error}</div>}
+      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg px-8 py-6 mb-4">
+        <div className="mb-4">
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+            Titre
+          </label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="...Ménage..."
+            required
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            Description
+          </label>
+          <input
+            type="text"
+            name="description"
+            id="description"
+            placeholder="...Il faut passer l'aspirateur..."
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 font-semibold text-white px-4 py-2 rounded-md"
+        >
+          Ajoutez une nouvelle tâche
+        </button>
       </form>
       <Routes>
         <Route
           path="/"
-          element={<TodoList todos={todos} onToggleCompleted={handleToggleCompleted} />}
+          element={<TodoList todos={todos} onToggleCompleted={handleToggleCompleted} onDeleteAllTodo={handleDeleteAllTodos}/>}
           />
         <Route path="/todos/:id" element={<TodoDetails todos={todos} />} />
       </Routes>

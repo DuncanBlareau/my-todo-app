@@ -1,46 +1,59 @@
-# Getting Started with Create React App
+# Todo App avec TypeScript et React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ce projet est une application Todo développée avec TypeScript et React. L'application permet de gérer une liste de tâches, avec des fonctionnalités pour ajouter, marquer comme complétées et supprimer des tâches.
 
-## Available Scripts
+## Fonctionnalités
 
-In the project directory, you can run:
+- Ajouter un todo avec un titre et une description (optionnelle)
+- Marquer un todo comme complété ou en cours
+- Supprimer tous les todos de la liste
+- Afficher les détails d'un todo
+- Mock des données d'API avec Mock Service Worker (MSW)
+- Sauvegarde des todos dans le localStorage pour conserver les données entre les sessions de navigation
+  - Note : Lors du rechargement de la page, les todos sauvegardés dans le localStorage sont remplacés par les todos mockés, car la liste est réinitialisée avec les données de l'API mockée.
+- Utilisation de Docker et Docker Compose pour exécuter l'application
 
-### `npm start`
+## Architecture du code
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Le projet utilise les composants suivants :
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- `TodoList` : Affiche la liste des todos et gère la suppression de tous les todos
+- `TodoItem` : Représente un todo individuel dans la liste
+- `TodoDetails` : Affiche les détails d'un todo spécifique
 
-### `npm test`
+Le dossier `api` contient les fonctions pour communiquer avec l'API :
+- `getTodos`
+- `toggleTodo`
+- `addTodo`
+- `deleteAllTodos`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Le dossier `models` contient les types et interfaces pour les données de l'application.
 
-### `npm run build`
+## Bibliothèques utilisées
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [React Router](https://reactrouter.com/)
+- [Mock Service Worker (MSW)](https://mswjs.io/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Heroicons](https://heroicons.com/)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Instructions d'installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clonez le dépôt avec `git clone <url-du-dépôt>`
+2. Accédez au dossier du projet avec `cd <nom-du-dossier>`
+3. Installez les dépendances avec `npm install`
 
-### `npm run eject`
+## Utilisation
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Pour exécuter l'application en mode développement, exécutez `npm start` et accédez à [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Pour exécuter l'application avec Docker, assurez-vous que Docker et Docker Compose sont installés, puis exécutez `docker-compose up` et accédez à [http://localhost:80](http://localhost:80).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Pour exécuter les tests, exécutez `npm test`.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Informations supplémentaires
 
-## Learn More
+Ce projet a été créé avec [Create React App](https://github.com/facebook/create-react-app) et utilise [React Router](https://reactrouter.com/) pour la navigation entre les pages.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Pour en savoir plus sur React, consultez la [documentation de React](https://reactjs.org/).

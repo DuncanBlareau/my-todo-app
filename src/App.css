@@ -28,12 +28,6 @@
   color: #61dafb;
 }
 
-.error {
-  color: red;
-  font-weight: bold;
-  margin: 1rem 0;
-}
-
 
 @keyframes App-logo-spin {
   from {
